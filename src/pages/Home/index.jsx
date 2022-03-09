@@ -1,9 +1,10 @@
 import { Component } from 'react';
-import './App.css';
-import { Posts } from './components/Posts';
-import { loadPosts } from './utils/load-posts';
+import './styles.css';
 
-class App extends Component {
+import { Posts } from '../../components/Posts';
+import { loadPosts } from '../../utils/load-posts';
+
+export class Home extends Component {
   state = {
     posts: []
   };
@@ -27,5 +28,3 @@ loadPosts = async () => {
     );
   }
 }
-
-export default App;
