@@ -10,7 +10,7 @@ export class Home extends Component {
     posts: [],
     allPosts: [],
     page: 0,
-    postsPerPage: 99,
+    postsPerPage: 2,
     searchValue: '',
   };
 
@@ -52,19 +52,25 @@ handleChange = (e) => {
 
     return (
       <section className='container'>
+        {!!searchValue && (
+          <h1>Search Value: {searchValue}</h1>
+        )}
+
         <input
           onChange={this.handleChange}
           value={searchValue}
           type='search'
-        />
+        /> <br /><br />
         <Posts posts={posts} />
 
         <div className='button-container'>
-          <Button 
-            text='Load more posts'
-            onClick={this.loadMorePosts}
-            disabled={noMorePosts}
-          />
+          {!searchValue && (
+            <Button 
+              text='Load more posts'
+              onClick={this.loadMorePosts}
+              disabled={noMorePosts}
+            />
+          )}
         </div>
       </section>
     );
