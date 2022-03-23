@@ -4,6 +4,7 @@ import './styles.css';
 import { Posts } from '../../components/Posts';
 import { loadPosts } from '../../utils/load-posts';
 import { Button } from '../../components/Button';
+import { TextInput } from '../../components/TextInput';
 
 export class Home extends Component {
   state = {
@@ -59,15 +60,16 @@ handleChange = (e) => {
 
     return (
       <section className='container'>
-        {!!searchValue && (
-          <h1>Search Value: {searchValue}</h1>
-        )}
+        <div className='search-container'>
+          {!!searchValue && (
+            <h1>Search Value: {searchValue}</h1>
+          )}
 
-        <input
-          onChange={this.handleChange}
-          value={searchValue}
-          type='search'
-        /> <br /><br />
+          <TextInput
+            searchValue={searchValue}
+            handleChange={this.handleChange}
+          />
+        </div>
 
         {filteredPosts.length > 0 && (
           <Posts posts={filteredPosts} />
