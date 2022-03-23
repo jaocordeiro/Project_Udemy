@@ -50,6 +50,13 @@ handleChange = (e) => {
     const { posts, page, postsPerPage, allPosts, searchValue } = this.state;
     const noMorePosts = page + postsPerPage >= allPosts.length;
 
+    const filteredPosts = !!searchValue ? allPosts.filter(post => {
+      return post.title.toLowerCase().includes(
+        searchValue.toLowerCase()
+      );
+    })
+    : posts
+
     return (
       <section className='container'>
         {!!searchValue && (
@@ -61,7 +68,14 @@ handleChange = (e) => {
           value={searchValue}
           type='search'
         /> <br /><br />
-        <Posts posts={posts} />
+
+        {filteredPosts.length > 0 && (
+          <Posts posts={filteredPosts} />
+        )}
+
+        {filteredPosts.length === 0 && (
+          <p>No to posts with that name</p>
+        )}
 
         <div className='button-container'>
           {!searchValue && (
