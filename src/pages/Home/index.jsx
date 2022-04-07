@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { React, useState, useEffect, useCallback } from 'react';
 import './styles.css';
 import { Posts } from '../../components/Posts';
 import { loadPosts } from '../../utils/load-posts';
@@ -15,18 +15,18 @@ export const Home = () => {
 
   const noMorePosts = page + postsPerPage >= allPosts.length;
 
-  const filteredPosts = !!searchValue ? 
+  const filteredPosts = searchValue ?
   allPosts.filter(post => {
     return post.title.toLowerCase().includes(
       searchValue.toLowerCase()
     );
   })
   : posts
-  
+
   const handleLoadPosts = useCallback(async (page, postsPerPage) => {
-    
+
     const postsAndPhotos = await loadPosts();
-    
+
     setPosts(postsAndPhotos.slice(page, postsPerPage));
     setAllPosts(postsAndPhotos);
   }, []);
@@ -34,7 +34,7 @@ export const Home = () => {
   useEffect(() => {
     handleLoadPosts(0, postsPerPage);
   }, [handleLoadPosts, postsPerPage]);
-  
+
   const loadMorePosts = () => {
     const nextPage = page + postsPerPage
     const nextPosts = allPosts.slice(nextPage, nextPage + postsPerPage);
@@ -72,7 +72,7 @@ export const Home = () => {
 
       <div className='button-container'>
         {!searchValue && (
-          <Button 
+          <Button
             text='Load more posts'
             onClick={loadMorePosts}
             disabled={noMorePosts}
