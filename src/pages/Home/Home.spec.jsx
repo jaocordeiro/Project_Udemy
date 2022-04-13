@@ -2,6 +2,7 @@ import {rest} from 'msw';
 import {setupServer} from 'msw/node';
 import { render, screen, waitForElementToBeRemoved } from "@testing-library/react";
 import {Home} from '.'
+import userEvent from '@testing-library/user-event';
 
 const handlers = [
   rest.get('*jsonplaceholder.typicode.com*',
@@ -34,7 +35,7 @@ const handlers = [
 
 const server = setupServer(...handlers);
 
-describe('<Hoem />', () => {
+describe('<Home />', () => {
   beforeAll(() => {
     server.listen();
   });
@@ -61,5 +62,48 @@ describe('<Hoem />', () => {
 
     const button = screen.getByRole('button', {name: /load more posts/i});
     expect(button).toBeInTheDocument();
+  });
+
+  it('should search for posts', async () => {
+    render(<Home />)
+    const noMorePosts = screen.getByText('No to posts with that name');
+
+    expect.assertions(12);
+
+    await waitForElementToBeRemoved(noMorePosts);
+
+    const search = screen.getByPlaceholderText(/Search/i);
+
+    expect(screen.getByRole('heading', {name: 'title1 1'}))
+    .toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'title2 2'}))
+    .toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'title3 3'}))
+    .toBeInTheDocument();
+    expect(screen.queryByRole('heading', {name: 'title4 4'}))
+    .not.toBeInTheDocument();
+
+    userEvent.type(search, 'title1');
+    expect(screen.getByRole('heading', {name: 'title1 1'}))
+    .toBeInTheDocument();
+    expect(screen.queryByRole('heading', {name: 'title2 2'}))
+    .not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', {name: 'title3 3'}))
+    .not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', {name: 'title4 4'}))
+    .not.toBeInTheDocument();
+
+    expect(screen.getByRole('heading', {name: 'Search Value: title1'}))
+    .toBeInTheDocument();
+
+    userEvent.clear(search);
+    expect(screen.getByRole('heading', {name: 'title1 1'}))
+    .toBeInTheDocument();
+    expect(screen.getByRole('heading', {name: 'title2 2'}))
+    .toBeInTheDocument();
+
+    userEvent.type(search, 'Não existe posts com esse nome');
+    expect(screen.getByText('No to posts with that name'))
+    .toBeInTheDocument();
   });
 });
