@@ -49,6 +49,17 @@ describe('<Hoem />', () => {
     render(<Home />)
     const noMorePosts = screen.getByText('No to posts with that name');
 
+    expect.assertions(3);
+
     await waitForElementToBeRemoved(noMorePosts);
+
+    const search = screen.getByPlaceholderText(/Search/i);
+    expect(search).toBeInTheDocument();
+
+    const images = screen.getAllByRole('img', {name: /title/i});
+    expect(images).toHaveLength(3);
+
+    const button = screen.getByRole('button', {name: /load more posts/i});
+    expect(button).toBeInTheDocument();
   });
 });
