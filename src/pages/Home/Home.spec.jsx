@@ -105,5 +105,19 @@ describe('<Home />', () => {
     userEvent.type(search, 'Não existe posts com esse nome');
     expect(screen.getByText('No to posts with that name'))
     .toBeInTheDocument();
-  });
+    });
+
+    it('should load more post', async () => {
+      render(<Home />)
+      const noMorePosts = screen.getByText('No to posts with that name');
+
+      await waitForElementToBeRemoved(noMorePosts);
+
+      const button = screen.getByRole('button', {name: /load more posts/i});
+
+      userEvent.click(button);
+      expect(screen.getByRole('heading', {name: 'title3 3'}))
+      .toBeInTheDocument();
+      expect(button).toBeDisabled();
+    });
 });
